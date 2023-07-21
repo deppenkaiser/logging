@@ -2,4 +2,4 @@
 
 #include <stdbool.h>
 
-void logMessage(const char* pMessage, bool bNewLine);
+void log_message(const char* pmessage, bool new_line);

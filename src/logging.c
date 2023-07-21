@@ -1,8 +1,8 @@
 #include "logging/logging.h"
 #include <stdio.h>
 
-void logMessage(const char* pMessage, bool bNewLine)
+void log_message(const char* pmessage, bool new_line)
 {
-    printf(bNewLine ? "%s\n" : "%s", pMessage);
+    printf(new_line ? "%s\n" : "%s", pmessage);
     fflush(stdout);
 }
