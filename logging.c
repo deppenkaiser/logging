@@ -1,4 +1,6 @@
 #include "logging.h"
+
+#include <threading/threading.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -6,6 +8,17 @@
 
 void logging_log_message(const char* message)
 {
+    static bool initialized = false;
+    static threading_critical_section cs = {0};
+
+    if (initialized == false)
+    {
+        // the cs stays initialized
+        threading_initialize_critical_section(&cs);
+        initialized = true;
+    }
+
+    threading_lock_critical_section(&cs);
     if (strlen(message) > 0)
     {
         static long first_time_ns = 0.0;
@@ -21,4 +34,5 @@ void logging_log_message(const char* message)
 
         fflush(stdout);
     }
+    threading_unlock_critical_section(&cs);
 }
