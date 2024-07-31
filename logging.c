@@ -1,4 +1,4 @@
-#include "logging.h"
+#include "logging/logging.h"
 
 #include <threading/threading.h>
 #include <stdio.h>
