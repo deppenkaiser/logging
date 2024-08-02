@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 void logging_log_message(const char* message)
 {
