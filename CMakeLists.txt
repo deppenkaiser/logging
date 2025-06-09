@@ -13,7 +13,7 @@ target_sources(logging PRIVATE
     logging.c
 )
 
-target_include_directories(logging PRIVATE
+target_include_directories(logging PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/../threading
     ${CMAKE_CURRENT_LIST_DIR}/../string
 )
