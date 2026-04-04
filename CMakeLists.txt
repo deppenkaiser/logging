@@ -17,3 +17,7 @@ target_include_directories(logging PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/../threading
     ${CMAKE_CURRENT_LIST_DIR}/../string
 )
+
+target_link_libraries(logging
+	threading
+)
