@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+include_guard(GLOBAL)
 
 project(logging LANGUAGES C)
 
@@ -7,17 +8,27 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+add_subdirectory(
+	../threading
+	${CMAKE_BINARY_DIR}/threading
+)
+
+add_subdirectory(
+	../string
+	${CMAKE_BINARY_DIR}/string_from_logging
+)
+
 add_library(logging STATIC)
 
 target_sources(logging PRIVATE
-    logging.c
+	logging.c
 )
 
 target_include_directories(logging PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/../threading
-    ${CMAKE_CURRENT_LIST_DIR}/../string
+	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_libraries(logging
 	threading
+	string
 )
