@@ -9,7 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_library(logging STATIC)
-add_subdirectory(../threading ${CMAKE_BINARY_DIR}/threading)
+add_subdirectory(../threading ${CMAKE_BINARY_DIR}/threading_from_logging)
 add_subdirectory(../string ${CMAKE_BINARY_DIR}/string_from_logging)
 
 target_sources(logging PRIVATE
