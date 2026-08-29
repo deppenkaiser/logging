@@ -28,6 +28,10 @@ Ausgabe:
 
 - `threading` (kritische Sektion)
 
+## Wiki
+
+Dokumentation: [logging – Zeitstempel-Logging](https://czybor.i234.me/wiki/sw-module/logging/) (Quartz-Wiki)
+
 ## Build
 
 ```bash
