@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 void logging_log_message(const char* message)
 {
@@ -14,7 +15,6 @@ void logging_log_message(const char* message)
 
     if (initialized == false)
     {
-        // the cs stays initialized
         threading_critical_section_initialize(&cs);
         initialized = true;
     }
@@ -36,4 +36,17 @@ void logging_log_message(const char* message)
         fflush(stdout);
     }
     threading_critical_section_unlock(&cs);
+}
+
+void logging_log_formatted(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    
+    char buffer[1024];
+    vsnprintf(buffer, sizeof(buffer), format, args);
+    
+    va_end(args);
+    
+    logging_log_message(buffer);
 }
