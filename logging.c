@@ -40,6 +40,17 @@ void logging_log_message(const char* message)
 
 void logging_log_formatted(const char* format, ...)
 {
+    static bool initialized = false;
+    static threading_critical_section cs = {0};
+
+    if (initialized == false)
+    {
+        threading_critical_section_initialize(&cs);
+        initialized = true;
+    }
+
+    threading_critical_section_lock(&cs);
+    
     va_list args;
     va_start(args, format);
     
@@ -48,5 +59,22 @@ void logging_log_formatted(const char* format, ...)
     
     va_end(args);
     
-    logging_log_message(buffer);
+    // Jetzt loggen (ohne Critical Section, weil wir sie schon haben)
+    if (strlen(buffer) > 0)
+    {
+        static long first_time_ns = 0.0;
+        clockid_t clockid = 0;
+        struct timespec ts = {0};
+        clock_gettime(0, &ts);
+        int64_t time_ns = ts.tv_sec * 1.0e9 + ts.tv_nsec;
+
+        first_time_ns = first_time_ns == 0.0 ? time_ns : first_time_ns;
+
+        int64_t diff_ns = time_ns - first_time_ns;
+        printf("[%020ld]: %s\n", diff_ns, buffer);
+
+        fflush(stdout);
+    }
+    
+    threading_critical_section_unlock(&cs);
 }
