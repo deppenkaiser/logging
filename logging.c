@@ -57,7 +57,7 @@ void logging_log_formatted(const char* format, ...)
     print_log(NULL, buffer);
 }
 
-void logging_log_with_ID(const char* module_id, const char* file, const char* function, const char* format, ...)
+void logging_log_with_ID(const char* module_id, const char* function, const char* format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -66,6 +66,6 @@ void logging_log_with_ID(const char* module_id, const char* file, const char* fu
     va_end(args);
 
     char prefix[256];
-    snprintf(prefix, sizeof(prefix), "%s: %s:%s", module_id, file, function);
+    snprintf(prefix, sizeof(prefix), "%s: %s", module_id, function);
     print_log(prefix, buffer);
 }
