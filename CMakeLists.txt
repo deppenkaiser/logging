@@ -3,6 +3,11 @@ include_guard(GLOBAL)
 
 project(logging LANGUAGES C)
 
+option(LOGGING_ENABLED "Enable logging" OFF)
+if(LOGGING_ENABLED)
+    target_compile_definitions(logging PRIVATE LOGGING_ENABLED)
+endif()
+
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
