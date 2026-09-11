@@ -50,16 +50,15 @@ void logging_log_formatted(const char* format, ...)
     }
 
     threading_critical_section_lock(&cs);
-    
+
     va_list args;
     va_start(args, format);
-    
+
     char buffer[1024];
     vsnprintf(buffer, sizeof(buffer), format, args);
-    
+
     va_end(args);
-    
-    // Jetzt loggen (ohne Critical Section, weil wir sie schon haben)
+
     if (strlen(buffer) > 0)
     {
         static long first_time_ns = 0.0;
@@ -75,6 +74,76 @@ void logging_log_formatted(const char* format, ...)
 
         fflush(stdout);
     }
-    
+
+    threading_critical_section_unlock(&cs);
+}
+
+void logging_log_message_with_module(const char* module_id, const char* message)
+{
+    static bool initialized = false;
+    static threading_critical_section cs = {0};
+
+    if (initialized == false)
+    {
+        threading_critical_section_initialize(&cs);
+        initialized = true;
+    }
+
+    threading_critical_section_lock(&cs);
+    if (strlen(message) > 0)
+    {
+        static long first_time_ns = 0.0;
+        clockid_t clockid = 0;
+        struct timespec ts = {0};
+        clock_gettime(0, &ts);
+        int64_t time_ns = ts.tv_sec * 1.0e9 + ts.tv_nsec;
+
+        first_time_ns = first_time_ns == 0.0 ? time_ns : first_time_ns;
+
+        int64_t diff_ns = time_ns - first_time_ns;
+        printf("[%020ld]: %s: %s\n", diff_ns, module_id, message);
+
+        fflush(stdout);
+    }
+    threading_critical_section_unlock(&cs);
+}
+
+void logging_log_formatted_with_module(const char* module_id, const char* format, ...)
+{
+    static bool initialized = false;
+    static threading_critical_section cs = {0};
+
+    if (initialized == false)
+    {
+        threading_critical_section_initialize(&cs);
+        initialized = true;
+    }
+
+    threading_critical_section_lock(&cs);
+
+    va_list args;
+    va_start(args, format);
+
+    char buffer[1024];
+    vsnprintf(buffer, sizeof(buffer), format, args);
+
+    va_end(args);
+
+    if (strlen(buffer) > 0)
+    {
+        static long first_time_ns = 0.0;
+        clockid_t clockid = 0;
+        struct timespec ts = {0};
+        clock_gettime(0, &ts);
+        int64_t time_ns = ts.tv_sec * 1.0e9 + ts.tv_nsec;
+
+        first_time_ns = first_time_ns == 0.0 ? time_ns : first_time_ns;
+
+        int64_t diff_ns = time_ns - first_time_ns;
+        printf("[%020ld]: %s: %s\n", diff_ns, module_id, buffer);
+
+        fflush(stdout);
+    }
+
     threading_critical_section_unlock(&cs);
 }
