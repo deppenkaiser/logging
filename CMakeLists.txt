@@ -3,11 +3,6 @@ include_guard(GLOBAL)
 
 project(logging LANGUAGES C)
 
-option(LOGGING_ENABLED "Enable logging" OFF)
-if(LOGGING_ENABLED)
-    target_compile_definitions(logging PRIVATE LOGGING_ENABLED)
-endif()
-
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -20,6 +15,18 @@ add_subdirectory(../string ${CMAKE_BINARY_DIR}/string_from_logging)
 target_sources(logging PRIVATE
 	logging.c
 )
+
+if(NOT DEFINED LOGGING_ENABLED)
+    set(LOGGING_ENABLED ON)
+endif()
+
+if(LOGGING_ENABLED)
+    target_compile_definitions(logging PUBLIC LOGGING_ENABLED=1)
+	message(STATUS "Logging enabled: LOGGING_ENABLED=1")
+else()
+    target_compile_definitions(logging PUBLIC LOGGING_ENABLED=0)
+	message(STATUS "Logging enabled: LOGGING_ENABLED=0")
+endif()
 
 target_include_directories(logging PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
